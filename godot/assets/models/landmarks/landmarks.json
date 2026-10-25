@@ -1,0 +1,141 @@
+{
+  "by_name": {
+    "시계탑": "clock_tower",
+    "옛 기차역": "old_station",
+    "전망 타워": "observation_tower"
+  },
+  "by_kind": {
+    "카페": "cafe",
+    "공원": "park",
+    "관공서": "gov_office",
+    "광장": "plaza",
+    "랜드마크": "clock_tower",
+    "문화시설": "museum",
+    "시장": "market",
+    "역": "station",
+    "체육시설": "gym"
+  },
+  "models": {
+    "cafe": {
+      "label": "카페",
+      "glb": "res://assets/models/landmarks/cafe.glb",
+      "thumb": "res://assets/models/landmarks/thumbs/cafe.png",
+      "tris": 352,
+      "size_m": [
+        11.0,
+        9.37,
+        10.0
+      ]
+    },
+    "park": {
+      "label": "공원",
+      "glb": "res://assets/models/landmarks/park.glb",
+      "thumb": "res://assets/models/landmarks/thumbs/park.png",
+      "tris": 648,
+      "size_m": [
+        14.0,
+        4.82,
+        12.0
+      ]
+    },
+    "gov_office": {
+      "label": "관공서",
+      "glb": "res://assets/models/landmarks/gov_office.glb",
+      "thumb": "res://assets/models/landmarks/thumbs/gov_office.png",
+      "tris": 328,
+      "size_m": [
+        20.0,
+        15.52,
+        16.0
+      ]
+    },
+    "plaza": {
+      "label": "광장",
+      "glb": "res://assets/models/landmarks/plaza.glb",
+      "thumb": "res://assets/models/landmarks/thumbs/plaza.png",
+      "tris": 678,
+      "size_m": [
+        16.0,
+        4.67,
+        16.0
+      ]
+    },
+    "clock_tower": {
+      "label": "시계탑",
+      "glb": "res://assets/models/landmarks/clock_tower.glb",
+      "thumb": "res://assets/models/landmarks/thumbs/clock_tower.png",
+      "tris": 492,
+      "size_m": [
+        10.0,
+        22.12,
+        10.0
+      ]
+    },
+    "old_station": {
+      "label": "옛 기차역",
+      "glb": "res://assets/models/landmarks/old_station.glb",
+      "thumb": "res://assets/models/landmarks/thumbs/old_station.png",
+      "tris": 774,
+      "size_m": [
+        22.0,
+        15.62,
+        14.0
+      ]
+    },
+    "observation_tower": {
+      "label": "전망 타워",
+      "glb": "res://assets/models/landmarks/observation_tower.glb",
+      "thumb": "res://assets/models/landmarks/thumbs/observation_tower.png",
+      "tris": 556,
+      "size_m": [
+        10.0,
+        34.12,
+        10.0
+      ]
+    },
+    "museum": {
+      "label": "문화시설",
+      "glb": "res://assets/models/landmarks/museum.glb",
+      "thumb": "res://assets/models/landmarks/thumbs/museum.png",
+      "tris": 464,
+      "size_m": [
+        18.0,
+        9.72,
+        14.0
+      ]
+    },
+    "market": {
+      "label": "시장",
+      "glb": "res://assets/models/landmarks/market.glb",
+      "thumb": "res://assets/models/landmarks/thumbs/market.png",
+      "tris": 360,
+      "size_m": [
+        20.0,
+        7.32,
+        14.0
+      ]
+    },
+    "station": {
+      "label": "역",
+      "glb": "res://assets/models/landmarks/station.glb",
+      "thumb": "res://assets/models/landmarks/thumbs/station.png",
+      "tris": 296,
+      "size_m": [
+        14.0,
+        7.02,
+        12.0
+      ]
+    },
+    "gym": {
+      "label": "체육시설",
+      "glb": "res://assets/models/landmarks/gym.glb",
+      "thumb": "res://assets/models/landmarks/thumbs/gym.png",
+      "tris": 220,
+      "size_m": [
+        20.0,
+        8.52,
+        16.0
+      ]
+    }
+  }
+}

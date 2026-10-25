@@ -1,0 +1,307 @@
+{
+  "models": {
+    "VENDOR": {
+      "label": "노점상",
+      "kind": "figure",
+      "glb": "res://assets/models/figures/vendor.glb",
+      "thumb": "res://assets/models/figures/thumbs/vendor.png",
+      "max_tris": 600,
+      "anchor": "center",
+      "front_material": "vendor_shoe",
+      "tris": 528,
+      "size_m": [
+        0.96,
+        1.73,
+        1.32
+      ],
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "hip_m": 0.9
+    },
+    "TAXI": {
+      "label": "택시기사",
+      "kind": "figure",
+      "glb": "res://assets/models/figures/taxi.glb",
+      "thumb": "res://assets/models/figures/thumbs/taxi.png",
+      "max_tris": 600,
+      "anchor": "center",
+      "front_material": "taxi_shoe",
+      "tris": 408,
+      "size_m": [
+        0.6,
+        1.73,
+        0.3
+      ],
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "hip_m": 0.9
+    },
+    "DRONE": {
+      "label": "드론 유튜버",
+      "kind": "figure",
+      "glb": "res://assets/models/figures/drone.glb",
+      "thumb": "res://assets/models/figures/thumbs/drone.png",
+      "max_tris": 600,
+      "anchor": "center",
+      "front_material": "drone_shoe",
+      "tris": 520,
+      "size_m": [
+        0.6,
+        2.29,
+        0.75
+      ],
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR",
+        "Drone"
+      ],
+      "hip_m": 0.9
+    },
+    "LOCAL": {
+      "label": "동네 토박이",
+      "kind": "figure",
+      "glb": "res://assets/models/figures/local.glb",
+      "thumb": "res://assets/models/figures/thumbs/local.png",
+      "max_tris": 600,
+      "anchor": "center",
+      "front_material": "local_shoe",
+      "tris": 372,
+      "size_m": [
+        0.58,
+        1.61,
+        0.46
+      ],
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "hip_m": 0.839
+    },
+    "RIDER": {
+      "label": "배달 라이더",
+      "kind": "figure",
+      "glb": "res://assets/models/figures/rider.glb",
+      "thumb": "res://assets/models/figures/thumbs/rider.png",
+      "max_tris": 600,
+      "anchor": "center",
+      "front_material": "rider_shoe",
+      "tris": 328,
+      "size_m": [
+        0.6,
+        1.75,
+        0.55
+      ],
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "hip_m": 0.9
+    },
+    "GUARD": {
+      "label": "경비원",
+      "kind": "figure",
+      "glb": "res://assets/models/figures/guard.glb",
+      "thumb": "res://assets/models/figures/thumbs/guard.png",
+      "max_tris": 600,
+      "anchor": "center",
+      "front_material": "guard_shoe",
+      "tris": 368,
+      "size_m": [
+        0.6,
+        1.74,
+        0.31
+      ],
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "hip_m": 0.9
+    },
+    "COP": {
+      "label": "순찰 경관",
+      "kind": "figure",
+      "glb": "res://assets/models/figures/cop.glb",
+      "thumb": "res://assets/models/figures/thumbs/cop.png",
+      "max_tris": 600,
+      "anchor": "center",
+      "front_material": "cop_shoe",
+      "tris": 416,
+      "size_m": [
+        0.6,
+        1.74,
+        0.31
+      ],
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "hip_m": 0.9
+    },
+    "GOSSIP": {
+      "label": "오지랖 주민",
+      "kind": "figure",
+      "glb": "res://assets/models/figures/gossip.glb",
+      "thumb": "res://assets/models/figures/thumbs/gossip.png",
+      "max_tris": 600,
+      "anchor": "center",
+      "front_material": "gossip_shoe",
+      "tris": 424,
+      "size_m": [
+        0.68,
+        1.75,
+        0.35
+      ],
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "hip_m": 0.9
+    },
+    "ANON": {
+      "label": "익명 제보자",
+      "kind": "figure",
+      "glb": "res://assets/models/figures/anon.glb",
+      "thumb": "res://assets/models/figures/thumbs/anon.png",
+      "max_tris": 400,
+      "anchor": "center",
+      "front_material": "anon_face",
+      "tris": 268,
+      "size_m": [
+        0.6,
+        1.76,
+        0.3
+      ],
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "hip_m": 0.9
+    },
+    "CULPRIT_RUN": {
+      "label": "달아나는 범인",
+      "kind": "figure",
+      "glb": "res://assets/models/figures/culprit_run.glb",
+      "thumb": "res://assets/models/figures/thumbs/culprit_run.png",
+      "max_tris": 500,
+      "anchor": "center",
+      "front_material": "culprit_run_mask",
+      "tris": 488,
+      "size_m": [
+        0.71,
+        1.71,
+        1.09
+      ],
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ]
+    },
+    "CULPRIT_CUFFED": {
+      "label": "수갑 찬 범인",
+      "kind": "figure",
+      "glb": "res://assets/models/figures/culprit_cuffed.glb",
+      "thumb": "res://assets/models/figures/thumbs/culprit_cuffed.png",
+      "max_tris": 500,
+      "anchor": "center",
+      "front_material": "culprit_cuffed_mask",
+      "tris": 362,
+      "size_m": [
+        0.6,
+        1.69,
+        0.5
+      ],
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "hip_m": 0.9
+    },
+    "atm": {
+      "label": "ATM 부스",
+      "kind": "prop",
+      "glb": "res://assets/models/figures/atm.glb",
+      "thumb": "res://assets/models/figures/thumbs/atm.png",
+      "max_tris": 300,
+      "anchor": "center",
+      "front_material": "atm_screen",
+      "tris": 92,
+      "size_m": [
+        0.94,
+        1.95,
+        0.84
+      ],
+      "nodes": [
+        "Body"
+      ]
+    },
+    "handcuffs": {
+      "label": "수갑",
+      "kind": "prop",
+      "glb": "res://assets/models/figures/handcuffs.glb",
+      "thumb": "res://assets/models/figures/thumbs/handcuffs.png",
+      "max_tris": 300,
+      "anchor": "center",
+      "front_material": null,
+      "tris": 184,
+      "size_m": [
+        0.32,
+        0.15,
+        0.02
+      ],
+      "nodes": [
+        "Body"
+      ]
+    },
+    "police_tape": {
+      "label": "폴리스 라인",
+      "kind": "prop",
+      "glb": "res://assets/models/figures/police_tape.glb",
+      "thumb": "res://assets/models/figures/thumbs/police_tape.png",
+      "max_tris": 300,
+      "anchor": "center",
+      "front_material": "police_tape_stripe",
+      "tris": 228,
+      "size_m": [
+        4.36,
+        1.05,
+        0.36
+      ],
+      "nodes": [
+        "Body"
+      ]
+    },
+    "money_bag": {
+      "label": "돈 가방",
+      "kind": "prop",
+      "glb": "res://assets/models/figures/money_bag.glb",
+      "thumb": "res://assets/models/figures/thumbs/money_bag.png",
+      "max_tris": 300,
+      "anchor": "center",
+      "front_material": "money_bag_won",
+      "tris": 162,
+      "size_m": [
+        0.34,
+        0.44,
+        0.34
+      ],
+      "nodes": [
+        "Body"
+      ]
+    }
+  }
+}

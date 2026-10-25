@@ -1,0 +1,29 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/landmark_preview.gd" id="1_script"]
+
+[sub_resource type="Environment" id="Environment_light"]
+background_mode = 1
+background_color = Color(0.968, 0.972, 0.98, 1)
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.25
+reflected_light_source = 1
+tonemap_mode = 0
+
+[node name="LandmarkPreview" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_light")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-55, 35, 0)
+light_energy = 0.25
+shadow_enabled = true
+shadow_opacity = 0.35
+directional_shadow_max_distance = 220.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.88, -0.48, 0, 0.48, 0.88, 14, 62, -112)
+fov = 34.0

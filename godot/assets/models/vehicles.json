@@ -1,0 +1,160 @@
+{
+  "models": {
+    "ego_car": {
+      "label": "내 차",
+      "glb": "res://assets/models/ego_car.glb",
+      "thumb": "res://assets/models/thumbs/ego_car.png",
+      "max_tris": 2000,
+      "nodes": [
+        "Body"
+      ],
+      "anchor": "center",
+      "front_material": "ego_head",
+      "tris": 486,
+      "size_m": [
+        2.16,
+        1.74,
+        4.72
+      ]
+    },
+    "traffic_sedan": {
+      "label": "세단",
+      "glb": "res://assets/models/traffic_sedan.glb",
+      "thumb": "res://assets/models/thumbs/traffic_sedan.png",
+      "max_tris": 2000,
+      "nodes": [
+        "Body"
+      ],
+      "anchor": "center",
+      "front_material": "sedan_head",
+      "tris": 514,
+      "size_m": [
+        2.08,
+        1.44,
+        4.67
+      ]
+    },
+    "traffic_suv": {
+      "label": "SUV",
+      "glb": "res://assets/models/traffic_suv.glb",
+      "thumb": "res://assets/models/thumbs/traffic_suv.png",
+      "max_tris": 2000,
+      "nodes": [
+        "Body"
+      ],
+      "anchor": "center",
+      "front_material": "suv_head",
+      "tris": 510,
+      "size_m": [
+        2.18,
+        1.78,
+        4.77
+      ]
+    },
+    "police_car": {
+      "label": "경찰차",
+      "glb": "res://assets/models/police_car.glb",
+      "thumb": "res://assets/models/thumbs/police_car.png",
+      "max_tris": 2000,
+      "nodes": [
+        "Body",
+        "LightBarRed",
+        "LightBarBlue"
+      ],
+      "anchor": "center",
+      "front_material": "police_head",
+      "tris": 610,
+      "size_m": [
+        2.12,
+        1.61,
+        4.87
+      ]
+    },
+    "bus": {
+      "label": "시내버스",
+      "glb": "res://assets/models/bus.glb",
+      "thumb": "res://assets/models/thumbs/bus.png",
+      "max_tris": 1200,
+      "nodes": [
+        "Body"
+      ],
+      "anchor": "center",
+      "front_material": "bus_head",
+      "tris": 628,
+      "size_m": [
+        2.9,
+        3.35,
+        11.05
+      ]
+    },
+    "taxi": {
+      "label": "택시",
+      "glb": "res://assets/models/taxi.glb",
+      "thumb": "res://assets/models/thumbs/taxi.png",
+      "max_tris": 1200,
+      "nodes": [
+        "Body",
+        "TaxiSign"
+      ],
+      "anchor": "center",
+      "front_material": "taxi_head",
+      "tris": 526,
+      "size_m": [
+        2.08,
+        1.66,
+        4.72
+      ]
+    },
+    "truck": {
+      "label": "1톤 트럭",
+      "glb": "res://assets/models/truck.glb",
+      "thumb": "res://assets/models/thumbs/truck.png",
+      "max_tris": 1200,
+      "nodes": [
+        "Body"
+      ],
+      "anchor": "center",
+      "front_material": "truck_head",
+      "tris": 536,
+      "size_m": [
+        2.06,
+        1.98,
+        5.12
+      ]
+    },
+    "compact": {
+      "label": "경차",
+      "glb": "res://assets/models/compact.glb",
+      "thumb": "res://assets/models/thumbs/compact.png",
+      "max_tris": 1200,
+      "nodes": [
+        "Body"
+      ],
+      "anchor": "center",
+      "front_material": "compact_head",
+      "tris": 486,
+      "size_m": [
+        1.86,
+        1.52,
+        3.62
+      ]
+    },
+    "scooter": {
+      "label": "배달 오토바이",
+      "glb": "res://assets/models/scooter.glb",
+      "thumb": "res://assets/models/thumbs/scooter.png",
+      "max_tris": 1200,
+      "nodes": [
+        "Body"
+      ],
+      "anchor": "center",
+      "front_material": "scooter_head",
+      "tris": 460,
+      "size_m": [
+        0.72,
+        1.74,
+        1.86
+      ]
+    }
+  }
+}

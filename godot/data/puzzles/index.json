@@ -1,0 +1,98 @@
+[
+ {
+  "id": "easy-1000",
+  "preset": "easy",
+  "file": "easy-1000.json",
+  "minInvestigations": 3
+ },
+ {
+  "id": "easy-1001",
+  "preset": "easy",
+  "file": "easy-1001.json",
+  "minInvestigations": 3
+ },
+ {
+  "id": "easy-1002",
+  "preset": "easy",
+  "file": "easy-1002.json",
+  "minInvestigations": 2
+ },
+ {
+  "id": "easy-1003",
+  "preset": "easy",
+  "file": "easy-1003.json",
+  "minInvestigations": 3
+ },
+ {
+  "id": "normal-1000",
+  "preset": "normal",
+  "file": "normal-1000.json",
+  "minInvestigations": 3
+ },
+ {
+  "id": "normal-1001",
+  "preset": "normal",
+  "file": "normal-1001.json",
+  "minInvestigations": 3
+ },
+ {
+  "id": "normal-1003",
+  "preset": "normal",
+  "file": "normal-1003.json",
+  "minInvestigations": 3
+ },
+ {
+  "id": "normal-1005",
+  "preset": "normal",
+  "file": "normal-1005.json",
+  "minInvestigations": 3
+ },
+ {
+  "id": "hard-1000",
+  "preset": "hard",
+  "file": "hard-1000.json",
+  "minInvestigations": 6
+ },
+ {
+  "id": "hard-1001",
+  "preset": "hard",
+  "file": "hard-1001.json",
+  "minInvestigations": 5
+ },
+ {
+  "id": "hard-1002",
+  "preset": "hard",
+  "file": "hard-1002.json",
+  "minInvestigations": 5
+ },
+ {
+  "id": "hard-1004",
+  "preset": "hard",
+  "file": "hard-1004.json",
+  "minInvestigations": 5
+ },
+ {
+  "id": "phishing-1000",
+  "preset": "phishing",
+  "file": "phishing-1000.json",
+  "minInvestigations": 4
+ },
+ {
+  "id": "phishing-1001",
+  "preset": "phishing",
+  "file": "phishing-1001.json",
+  "minInvestigations": 3
+ },
+ {
+  "id": "phishing-1002",
+  "preset": "phishing",
+  "file": "phishing-1002.json",
+  "minInvestigations": 4
+ },
+ {
+  "id": "phishing-1003",
+  "preset": "phishing",
+  "file": "phishing-1003.json",
+  "minInvestigations": 3
+ }
+]

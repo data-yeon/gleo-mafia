@@ -1,0 +1,111 @@
+{
+  "models": {
+    "tree_round": {
+      "label": "가로수(둥근 활엽수)",
+      "glb": "res://assets/models/props/tree_round.glb",
+      "thumb": "res://assets/models/props/thumbs/tree_round.png",
+      "max_tris": 400,
+      "nodes": [
+        "Body"
+      ],
+      "anchor": "center",
+      "front_material": null,
+      "tris": 180,
+      "size_m": [
+        2.85,
+        5.4,
+        3.0
+      ]
+    },
+    "tree_cone": {
+      "label": "가로수(원뿔 침엽수)",
+      "glb": "res://assets/models/props/tree_cone.glb",
+      "thumb": "res://assets/models/props/thumbs/tree_cone.png",
+      "max_tris": 400,
+      "nodes": [
+        "Body"
+      ],
+      "anchor": "center",
+      "front_material": null,
+      "tris": 56,
+      "size_m": [
+        2.5,
+        4.4,
+        2.38
+      ]
+    },
+    "street_light": {
+      "label": "가로등",
+      "glb": "res://assets/models/props/street_light.glb",
+      "thumb": "res://assets/models/props/thumbs/street_light.png",
+      "max_tris": 600,
+      "nodes": [
+        "Body"
+      ],
+      "anchor": "pole",
+      "front_material": null,
+      "tris": 92,
+      "size_m": [
+        2.45,
+        8.18,
+        0.4
+      ]
+    },
+    "traffic_light_car": {
+      "label": "차량 신호등(가로형)",
+      "glb": "res://assets/models/props/traffic_light_car.glb",
+      "thumb": "res://assets/models/props/thumbs/traffic_light_car.png",
+      "max_tris": 800,
+      "nodes": [
+        "Body",
+        "LampRed",
+        "LampYellow",
+        "LampGreen"
+      ],
+      "anchor": "pole",
+      "front_material": "traffic_light_car_red",
+      "tris": 228,
+      "size_m": [
+        5.64,
+        6.2,
+        0.5
+      ]
+    },
+    "traffic_light_ped": {
+      "label": "보행 신호등",
+      "glb": "res://assets/models/props/traffic_light_ped.glb",
+      "thumb": "res://assets/models/props/thumbs/traffic_light_ped.png",
+      "max_tris": 400,
+      "nodes": [
+        "Body",
+        "LampRed",
+        "LampGreen"
+      ],
+      "anchor": "center",
+      "front_material": "traffic_light_ped_red",
+      "tris": 92,
+      "size_m": [
+        0.36,
+        2.75,
+        0.32
+      ]
+    },
+    "bus_stop": {
+      "label": "버스 정류장",
+      "glb": "res://assets/models/props/bus_stop.glb",
+      "thumb": "res://assets/models/props/thumbs/bus_stop.png",
+      "max_tris": 800,
+      "nodes": [
+        "Body"
+      ],
+      "anchor": "center",
+      "front_material": "bus_stop_front",
+      "tris": 132,
+      "size_m": [
+        4.4,
+        2.48,
+        1.9
+      ]
+    }
+  }
+}

@@ -1,0 +1,47 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://tests/model_preview.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://assets/models/ego_car.glb" id="2_ego"]
+[ext_resource type="PackedScene" path="res://assets/models/traffic_sedan.glb" id="3_sedan"]
+[ext_resource type="PackedScene" path="res://assets/models/traffic_suv.glb" id="4_suv"]
+[ext_resource type="PackedScene" path="res://assets/models/police_car.glb" id="5_police"]
+
+[sub_resource type="Environment" id="Environment_light"]
+background_mode = 1
+background_color = Color(0.968, 0.972, 0.98, 1)
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 0.25
+reflected_light_source = 1
+tonemap_mode = 0
+
+[node name="ModelPreview" type="Node3D"]
+script = ExtResource("1_script")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_light")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+rotation_degrees = Vector3(-55, 35, 0)
+light_energy = 0.25
+shadow_enabled = true
+shadow_opacity = 0.35
+directional_shadow_max_distance = 80.0
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.94, 0.34, 0, -0.34, 0.94, 3, 6.5, 19)
+fov = 32.0
+
+[node name="Models" type="Node3D" parent="."]
+
+[node name="ego_car" parent="Models" instance=ExtResource("2_ego")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.25, 0, 0)
+
+[node name="traffic_sedan" parent="Models" instance=ExtResource("3_sedan")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75, 0, 0)
+
+[node name="traffic_suv" parent="Models" instance=ExtResource("4_suv")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.75, 0, 0)
+
+[node name="police_car" parent="Models" instance=ExtResource("5_police")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.25, 0, 0)

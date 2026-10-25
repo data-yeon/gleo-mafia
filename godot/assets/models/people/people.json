@@ -1,0 +1,84 @@
+{
+  "models": {
+    "ped_suit": {
+      "label": "정장",
+      "glb": "res://assets/models/people/ped_suit.glb",
+      "thumb": "res://assets/models/people/thumbs/ped_suit.png",
+      "max_tris": 400,
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "anchor": "center",
+      "front_material": "ped_suit_shoe",
+      "tris": 316,
+      "size_m": [
+        0.6,
+        1.73,
+        0.32
+      ],
+      "hip_m": 0.9
+    },
+    "ped_casual": {
+      "label": "캐주얼",
+      "glb": "res://assets/models/people/ped_casual.glb",
+      "thumb": "res://assets/models/people/thumbs/ped_casual.png",
+      "max_tris": 400,
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "anchor": "center",
+      "front_material": "ped_casual_shoe",
+      "tris": 292,
+      "size_m": [
+        0.6,
+        1.73,
+        0.37
+      ],
+      "hip_m": 0.9
+    },
+    "ped_kid": {
+      "label": "아이",
+      "glb": "res://assets/models/people/ped_kid.glb",
+      "thumb": "res://assets/models/people/thumbs/ped_kid.png",
+      "max_tris": 400,
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "anchor": "center",
+      "front_material": "ped_kid_shoe",
+      "tris": 292,
+      "size_m": [
+        0.41,
+        1.21,
+        0.27
+      ],
+      "hip_m": 0.612
+    },
+    "ped_umbrella": {
+      "label": "우산 든 사람",
+      "glb": "res://assets/models/people/ped_umbrella.glb",
+      "thumb": "res://assets/models/people/thumbs/ped_umbrella.png",
+      "max_tris": 400,
+      "nodes": [
+        "Body",
+        "LegL",
+        "LegR"
+      ],
+      "anchor": "center",
+      "front_material": "ped_umbrella_shoe",
+      "tris": 354,
+      "size_m": [
+        1.1,
+        2.24,
+        1.05
+      ],
+      "hip_m": 0.9
+    }
+  }
+}
