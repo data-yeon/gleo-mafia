@@ -10,6 +10,9 @@
 ##   --view=overview          지도 보기(follow | overview)
 ##   --showcase               사건 모드 카드(경고, 장소 카드, 장소 목록)까지 한 화면에 보여주기
 ##   --screenshot=/path.png   잠시 뒤 화면을 저장하고 종료 (--autoplay가 있으면 그 뒤에)
+##   --car=grandeur          내 차 모델(grandeur | tucson | avante). 기본 그랜저
+##   --cam=wide              주행 패널 카메라를 멀리(기본은 차 가까이, 내 차가 크게 보인다)
+##   --no-ambient            주행 소리 층(길 소음, 터널 울림, 방향지시등)을 끈다
 ##   --no-case                사건 제안을 하지 않음 (주행만)
 ##   --autoplay=offer,accept,start,t2,ff0.3,s,r5,w3   자동 실행 (아래 _exec 참고)
 ##
@@ -48,6 +51,7 @@ var _glow: TextureRect                # Gleo가 말할 때 지도 위쪽 가장�
 var _glow_t := 0.0
 var gleo: GleoBar
 var sfx: Sfx
+var ambient: AmbientFx                 # 주행 소리 층(길 소음, 터널 울림, 방향지시등)
 var args := {}
 var puzzle: Dictionary = {}
 var plan: RoutePlan
@@ -149,6 +153,8 @@ func _build() -> void:
 	left_panel.clip_children = CanvasItem.CLIP_CHILDREN_AND_DRAW
 	left.add_child(left_panel)
 	adas = AdasView.new()
+	adas.ego_model = "hyundai_" + String(args.get("car", "grandeur"))
+	adas.cam_close = String(args.get("cam", "close")) != "wide"
 	left_panel.add_child(adas)
 	edge_left = EdgeFx.new()
 	left_panel.add_child(edge_left)
@@ -259,20 +265,43 @@ func _queue_layout() -> void:
 
 ## 카드 위치: TBT 왼쪽 위, 경고는 TBT 아래, ETA 왼쪽 아래, 목록 오른쪽 위,
 ## 장소 카드 목록 왼쪽, 음성 바 아래쪽 가운데.
+var _in_layout := false        # 배치 도중에 카드 크기가 바뀌어 resized가 다시 불러도 겹쳐 들어가지 않는다
+var _layout_dirty := false
+const LAYOUT_MAX_PASSES := 3
+
+
+## 카드 크기가 바뀌면 resized가 곧바로 _layout을 다시 부른다. 글꼴 폭에 따라 이 호출이 서로를 끝없이
+## 불러(재귀) 앱이 5분쯤 뒤 스택 넘침으로 꺼진 적이 있어, 배치 중에 온 호출은 표시만 해 두고
+## 바깥 호출이 최대 LAYOUT_MAX_PASSES번 다시 배치한다.
 func _layout() -> void:
+	if _in_layout:
+		_layout_dirty = true
+		return
+	_in_layout = true
+	for _pass in LAYOUT_MAX_PASSES:
+		_layout_dirty = false
+		_layout_once()
+		if not _layout_dirty:
+			break
+	_in_layout = false
+
+
+func _layout_once() -> void:
 	_layout_queued = false
 	if overlay == null:
 		return
 	var w := overlay.size.x
 	var h := overlay.size.y
 	var m := 24.0
-	for c in [tbt, eta, rail, alert, poi, case_card, suspect, action_card, call_pill, gleo]:
+	for c in [tbt, eta, rail, poi, case_card, suspect, action_card, call_pill, gleo]:
 		(c as Control).reset_size()
 	tbt.position = Vector2(m, m)
 	eta.position = Vector2(m, h - eta.size.y - m)
 	rail.position = Vector2(w - rail.size.x - m, m)
+	# 경고 카드는 TBT 카드 폭에 맞춘다. 줄였다 늘렸다(reset_size 뒤 폭 지정)를 하면 폭이 번갈아 바뀌어
+	# resized가 계속 울리므로, 크기를 한 번에 지정한다(최소 크기보다 작게는 안 줄어든다).
+	alert.size = Vector2(tbt.size.x, 0.0)
 	alert.position = Vector2(m, tbt.position.y + tbt.size.y + 14.0)     # TBT 카드 바로 아래 (내비 경고 위치)
-	alert.size.x = tbt.size.x
 	poi.position = Vector2(w - poi.size.x - m, m)                      # 오른쪽 목록 자리 (열리면 목록을 덮는다)
 	case_card.position = Vector2(w - case_card.size.x - m, m)          # 사건 제안·브리핑·노트도 같은 자리
 	suspect.position = Vector2(w - suspect.size.x - m, m)              # 용의 장소 검색(Gleo 결과 카드)
@@ -292,7 +321,9 @@ func _layout() -> void:
 	# 현장 3D 확대도: 크게(출동·결말)는 지도 가운데, 중간(회신 전화)은 왼쪽 카드와 오른쪽 카드 사이 빈 곳 가운데
 	inset.reset_size()
 	if inset.big:
-		inset.position = Vector2((w - inset.size.x) / 2.0, maxf(m, (h - inset.size.y) / 2.0 - 40.0))
+		# 얼굴 통화(mode call)는 도착 카드·통화 알약을 덜 가리게 더 위로 올린다
+		var lift := 100.0 if inset.mode == "call" else 40.0
+		inset.position = Vector2((w - inset.size.x) / 2.0, maxf(m, (h - inset.size.y) / 2.0 - lift))
 	else:
 		var fx0 := tbt.position.x + tbt.size.x + 16.0
 		var fx1 := w - right_w - m * 2.0
@@ -388,6 +419,10 @@ func _start_drive() -> void:
 	gleo.show_idle()
 	sfx = Sfx.new()
 	add_child(sfx)
+	ambient = AmbientFx.new()
+	ambient.sfx = sfx
+	ambient.enabled = not args.has("no-ambient")
+	add_child(ambient)
 	director = CaseDirector.new()
 	add_child(director)
 	director.setup({"shell": self, "sfx": sfx, "nav_map": nav_map, "rail": rail, "eta": eta, "alert": alert, "poi": poi,
@@ -591,6 +626,12 @@ func _on_tick(state: Dictionary) -> void:
 
 
 func _process(delta: float) -> void:
+	if ambient != null and sim != null and not _state.is_empty():
+		var ups := plan.upcoming(float(_state["s"]), 1)
+		var ic := "" if ups.is_empty() else String(ups[0]["icon"])
+		var dist := 0.0 if ups.is_empty() else float(ups[0]["distance"])
+		ambient.update(delta, float(_state["speed_kmh"]), not sim.in_tunnel().is_empty(),
+				sim.is_stopped() or sim.playback <= 0.0 or sim.finished, ic, dist, sim.playback)
 	_glow_t = maxf(_glow_t - delta, 0.0)
 	_glow.modulate.a = clampf(_glow_t / 0.8, 0.0, 1.0)
 	_ui_timer += delta

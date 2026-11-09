@@ -36,6 +36,7 @@ class Preset:
                              # v1 통계(smart 봇, 잠복 활용) 찍기 없이 해결: 보통 5→76%, 어려움 7→90%, 보이스피싱 6→84%
     anonymous: int = 0       # 직업을 밝히지 않는 익명 제보자 수
     force_cop_claim: bool = False   # 사칭범이 반드시 경관 행세 (데모 연출용)
+    labels: tuple[tuple[str, str], ...] = ()   # 악역 이름을 사건에 맞게 바꾸는 표 ((역할 키, 화면 이름), ...). 규칙은 그대로
 
     @property
     def n_evil(self) -> int:
@@ -49,6 +50,26 @@ PRESETS = {
     # 보이스피싱 사업부: 경관 사칭, 익명 제보
     "phishing": Preset("phishing", "보이스피싱", (Role.IMPOSTER, Role.BLACKMAILER), 1, 6,
                        anonymous=1, force_cop_claim=True),
+    # ---- 확장 사건 팩(경찰 검거 / 사기 / 불륜 현장). 규칙은 위와 같고, 이야기는 godot/data/story/<키>.json이 정한다.
+    # 경찰 검거
+    "wanted": Preset("wanted", "수배범 검거", (Role.THUG, Role.BLACKMAILER), 1, 5,
+                     labels=(("THUG", "수배범"), ("BLACKMAILER", "도피 조력자"))),
+    "theft": Preset("theft", "연쇄 절도", (Role.THUG, Role.THUG), 1, 5,
+                    labels=(("THUG", "절도범"),)),
+    "hitrun": Preset("hitrun", "뺑소니 추적", (Role.THUG,), 2, 4, anonymous=1,
+                     labels=(("THUG", "도주 운전자"),)),
+    # 사기
+    "usedgoods": Preset("usedgoods", "중고거래 사기", (Role.THUG,), 2, 4,
+                        labels=(("THUG", "먹튀 판매자"),)),
+    "invest": Preset("invest", "투자 사기", (Role.THUG, Role.BLACKMAILER, Role.BOSS), 1, 7, anonymous=1,
+                     labels=(("THUG", "바람잡이"), ("BLACKMAILER", "방장"), ("BOSS", "총책"))),
+    "romance": Preset("romance", "로맨스 스캠", (Role.THUG, Role.BLACKMAILER), 1, 6, anonymous=1,
+                      labels=(("THUG", "수거책"), ("BLACKMAILER", "맞장구 담당"))),
+    # 불륜 현장
+    "affair": Preset("affair", "출장 알리바이", (Role.THUG, Role.THUG), 1, 5,
+                     labels=(("THUG", "알리바이 당사자"),)),
+    "reunion": Preset("reunion", "동창회 알리바이", (Role.THUG, Role.BLACKMAILER), 1, 6, anonymous=1,
+                      labels=(("THUG", "알리바이 당사자"), ("BLACKMAILER", "입막음 담당"))),
 }
 
 

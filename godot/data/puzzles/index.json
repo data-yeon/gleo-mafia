@@ -94,5 +94,53 @@
   "preset": "phishing",
   "file": "phishing-1003.json",
   "minInvestigations": 3
+ },
+ {
+  "id": "wanted-2000",
+  "preset": "wanted",
+  "file": "wanted-2000.json",
+  "minInvestigations": 4
+ },
+ {
+  "id": "usedgoods-2300",
+  "preset": "usedgoods",
+  "file": "usedgoods-2300.json",
+  "minInvestigations": 3
+ },
+ {
+  "id": "affair-2601",
+  "preset": "affair",
+  "file": "affair-2601.json",
+  "minInvestigations": 3
+ },
+ {
+  "id": "hitrun-2200",
+  "preset": "hitrun",
+  "file": "hitrun-2200.json",
+  "minInvestigations": 3
+ },
+ {
+  "id": "romance-2500",
+  "preset": "romance",
+  "file": "romance-2500.json",
+  "minInvestigations": 5
+ },
+ {
+  "id": "reunion-2706",
+  "preset": "reunion",
+  "file": "reunion-2706.json",
+  "minInvestigations": 4
+ },
+ {
+  "id": "theft-2101",
+  "preset": "theft",
+  "file": "theft-2101.json",
+  "minInvestigations": 4
+ },
+ {
+  "id": "invest-2402",
+  "preset": "invest",
+  "file": "invest-2402.json",
+  "minInvestigations": 6
  }
 ]

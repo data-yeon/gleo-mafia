@@ -22,6 +22,7 @@ var items := []                  # 지금 떠 있는 버튼 [[라벨, id, 변형
 var instant := false             # 테스트·자동 실행: 타자 효과 없이 바로
 var typing := false
 var _shown := 0.0
+var _cps := CPS
 
 
 func _ready() -> void:
@@ -66,7 +67,7 @@ func _gui_input(e: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if not typing:
 		return
-	_shown += delta * CPS
+	_shown += delta * _cps
 	if int(_shown) >= _text.get_total_character_count():
 		finish()
 	else:
@@ -101,8 +102,9 @@ func show_listening(partial := "듣고 있어요…") -> void:
 	_mic.color = PleosTheme.ACCENT
 
 
-## who: 말하는 사람(Gleo, 제보자 이름 등)
-func show_speaking(text: String, who := "Gleo") -> void:
+## who: 말하는 사람(Gleo, 제보자 이름 등). cps: 자막 타자 속도(글자/초), 0이면 기본. 음성이 있으면 음성 길이에 맞춘다.
+func show_speaking(text: String, who := "Gleo", cps := 0.0) -> void:
+	_cps = cps if cps > 0.0 else CPS
 	var fresh := text != _text.text
 	if fresh:
 		spoke.emit()

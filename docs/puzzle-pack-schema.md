@@ -23,6 +23,11 @@
 - **`hints.contradictions`:** 모든 장소의 잠복 진술 조합을 포함한다.
 - **Godot:** `RoutePlan.from_pack(data)`가 `routePlan`을 그대로 읽는다. `routePlan`이 없는 예전 팩은 합성 경로 계획으로 대신한다.
 
+## 확장 사건 팩 (2026-11-06)
+- **`preset.key`가 이야기 파일을 정한다.** Godot `StoryBook`이 `data/story/<preset.key>.json`을 읽고, 없으면 `default.json`을 쓴다.
+- **악역 이름은 사건마다 바꿀 수 있다.** `rules.Preset.labels`에 `(역할 키, 화면 이름)`을 넣으면 `roles[key].label`이 그 이름으로 나온다. 규칙은 그대로다.
+- 추가한 사건 8개와 만든 방식은 [extra-cases.md](extra-cases.md)에 있다.
+
 ---
 
 아래는 v2 기준 설명이고, 위 추가분 말고는 그대로다.

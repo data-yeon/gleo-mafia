@@ -145,10 +145,11 @@ func speaker(id: int, obscured := false) -> String:
 	return "%s · %s" % [place_label(id), who(id, obscured)]
 
 
-## 회신 전화로 들은 말. 익명 제보는 소문 말투로 다시 쓴다.
+## 회신 전화로 들은 말. 팩에 손으로 쓴 익명 대사("(음성 변조)"로 시작)가 있으면 그대로 쓰고,
+## 없는 옛 팩의 익명 제보는 소문 말투로 다시 쓴다.
 func line(id: int) -> String:
 	var st: Dictionary = pub["statements"][id - 1]
-	if st["shownRole"] == null:
+	if st["shownRole"] == null and not String(st["line"]).begins_with("(음성 변조)"):
 		return "(음성 변조) 이름은 못 밝혀요. 들은 얘긴데요, %s." % _dae(claim(st["clue"]))
 	return String(st["line"])
 

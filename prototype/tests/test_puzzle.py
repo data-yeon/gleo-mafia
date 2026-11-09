@@ -13,7 +13,8 @@ from puzzle.generator import generate_case  # noqa: E402
 from puzzle.model import HONEST_ROLES, Role, popcount  # noqa: E402
 from puzzle.solver import CaseAnalyzer  # noqa: E402
 
-PRESET_KEYS = ("easy", "normal", "hard", "phishing")
+PRESET_KEYS = ("easy", "normal", "hard", "phishing",
+               "wanted", "theft", "hitrun", "usedgoods", "invest", "romance", "affair", "reunion")
 
 
 class SolverSoundness(unittest.TestCase):

@@ -47,6 +47,15 @@ Godot 4.7(GDScript, Compatibility 렌더러, 1920×1080). 계획은 [docs/demo-p
 
 사건 모드 카드 견본(`--showcase`): ![사건 모드](../docs/images/pleos-shell-case.png)
 
+## 제보자 음성·얼굴, 주행 소리
+- **제보자 음성:** 사건 팩 4개(`phishing-1000`~`1003`)의 제보 36줄을 ElevenLabs `eleven_v4`로 만들어 `assets/voice/`에 둔다. 숫자는 "일 번, 이 번"처럼 한자어 숫자로 적어 또박또박 들리게 했다.
+  - 목록 `assets/voice/manifest.json`의 대사와 지금 대사가 같을 때만 재생한다(`scripts/case/voice_bank.gd`). 다르거나 파일이 없으면 자막만 나온다.
+  - 자막은 음성 길이에 맞춰 나온다(`GleoBar.show_speaking`의 `cps`).
+- **제보자 얼굴:** 직업·이름별 12종(`assets/portraits/`, 경관 3명·드론·경비·라이더·할머니·할아버지·오지랖 여사·익명·노점상·택시)을 통화 카드에 쓴다(`scripts/case/portrait_bank.gd`).
+  - 터널처럼 통화가 흐릿한 구간은 얼굴 대신 기존 연출을 쓴다.
+- **주행 소리:** 길 소음, 터널 울림, 방향지시등을 코드로 합성해 깐다(`scripts/shell/ambient_fx.gd`). 제보자 음성이 나오는 동안은 낮춘다. `--no-ambient`로 끈다.
+- **내 차 모델:** `assets/models/hyundai/`(그랜저·투싼·아반떼)가 있으면 쓴다. 이 폴더는 사내 전용이라 공개 저장소에는 넣지 않고, 없으면 기본 세단으로 대신한다.
+
 ## 실행
 ```bash
 godot --path godot
@@ -78,6 +87,9 @@ godot --path godot res://scenes/main.tscn
 | `--mode=demo` | 발표용: 튜토리얼과 처음 겪는 규칙 팁을 띄우지 않는다 |
 | `--tutorial` | 튜토리얼 '수습 첫날'을 연다(이미 통과했어도). 진행은 `user://progress.cfg`에 남는다 |
 | `--flat-map` | 기울인 지도 대신 예전 평평한 지도 |
+| `--car=grandeur` | 내 차 모델: `grandeur`(기본), `tucson`, `avante`. 모델 파일이 없으면 기본 세단(`ego_car`)으로 대신한다 |
+| `--cam=wide` | 주행 패널 카메라를 멀리 둔다(기본은 차가 크게 보이는 가까운 카메라) |
+| `--no-ambient` | 주행 소리 층(길 소음, 터널 울림, 방향지시등)을 끈다 |
 | `--autoplay=offer,accept,start,t2,s,r8,w3` | 자동 실행(리허설·스크린샷용).<br>흐름: `offer`/`accept`/`start`(제안·수락·시작)<br>행동: `tN`(탐문), `sN`·`s`(잠복, `s`는 경고 카드), `rN`(출동), `selN`(선택), `mN`(의심 메모), `h`(힌트), `g`(정리)<br>시간: `ffP`(진행률 P까지 빨리 감기), `nextstake`(다음 잠복 찬스까지), `final`(최종 단계까지), `arrive`(도착까지), `wS`(S초 기다림)<br>경유지: `wpN`(N번 장소를 경유지로), `nearwp`(경유지 120m 앞까지), `towp`(경유지에 설 때까지)<br>검색: `xN`(N번 진술 칩 믿음 ↔ 못 믿음), `pg`(다음 페이지), `cl`(행동 카드 닫기)<br>연출: `waitfx`(회신 전화·출동 연출과 자막이 끝날 때까지), `skip`(자막 끝까지)<br>지도·튜토리얼: `tapN`(기울인 지도에서 N번 배지 누르기), `coachnext`(코치 말풍선의 [다음]) |
 | `--screenshot=/tmp/a.png` | 잠시 뒤 화면을 저장하고 종료(`--autoplay`가 있으면 그 뒤) |
 
@@ -119,6 +131,15 @@ godot --headless --path godot --script res://tests/test_vehicle_sim.gd
 - 용의 장소 검색(데모 사건 36 → 21 → 10 → 0 → ⑥ 빼면 1가지 ⑦⑧, 충돌 칩, 힌트, 검색 카드 ↔ 행동 카드)
 ```bash
 godot --headless --path godot --script res://tests/test_case_flow.gd
+```
+제보자 음성·얼굴·주행 소리는 아래 테스트로 확인한다.
+- 음성: 목록의 대사와 팩의 대사가 같은지, 파일이 있는지
+- 얼굴: 모든 팩의 제보자가 얼굴 그림을 받는지
+- 소리: 속도·터널·방향지시등에 따라 소리 층이 바뀌는지
+```bash
+godot --headless --path godot --script res://tests/test_voice_bank.gd
+godot --headless --path godot --script res://tests/test_portrait_bank.gd
+godot --headless --path godot --script res://tests/test_ambient.gd
 ```
 튜토리얼 '수습 첫날'은 아래 테스트로 확인한다. 단계를 순서대로 밟아 통과하는지, 단계가 아닌 행동은 막히는지 본다.
 ```bash

@@ -5,11 +5,13 @@ class_name CallPill
 extends PanelContainer
 
 const BG := Color("1f2633")
+const CIRCLE_SHADER := "shader_type canvas_item;\nvoid fragment() {\n\tCOLOR.a *= smoothstep(0.5, 0.475, length(UV - vec2(0.5)));\n}\n"
 
 var phase := ""                   # dialing | talking | ended | ""
 var _t := 0.0
 var _talk_t := 0.0
 var _avatar: PanelContainer
+var _portrait: TextureRect        # 제보자 얼굴(있을 때만). 없으면 이니셜 원
 var _initial: Label
 var _name: Label
 var _sub: Label
@@ -26,8 +28,19 @@ func _ready() -> void:
 	row.add_theme_constant_override("separation", 14)
 	add_child(row)
 	_avatar = PanelContainer.new()
-	_avatar.custom_minimum_size = Vector2(56, 56)
+	_avatar.custom_minimum_size = Vector2(76, 76)
 	row.add_child(_avatar)
+	_portrait = TextureRect.new()
+	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_portrait.stretch_mode = TextureRect.STRETCH_SCALE
+	_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_portrait.visible = false
+	var sh := Shader.new()                                           # 얼굴 그림을 동그랗게 보이게 한다
+	sh.code = CIRCLE_SHADER
+	var mat := ShaderMaterial.new()
+	mat.shader = sh
+	_portrait.material = mat
+	_avatar.add_child(_portrait)
 	_initial = PleosTheme.label("", "BodyStrong")
 	_initial.add_theme_color_override("font_color", Color.WHITE)
 	_initial.add_theme_font_size_override("font_size", 26)
@@ -58,13 +71,25 @@ func _ready() -> void:
 	visible = false
 
 
-## p: {initial, color, name, sub}
-func show_call(p: Dictionary) -> void:
+## 프로필(색 원 + 이니셜, 있으면 얼굴 그림)과 이름·부제를 채운다. p: {initial, color, name, sub, portrait(선택)}
+func _apply_profile(p: Dictionary) -> void:
 	_color = p.get("color", Color.GRAY)
-	_avatar.add_theme_stylebox_override("panel", PleosTheme.box(_color, 999, 0))
+	var tex = p.get("portrait", null)
+	if tex != null:      # 얼굴 그림은 색 원 없이 그림 자체가 동그랗게 보인다
+		_avatar.add_theme_stylebox_override("panel", StyleBoxEmpty.new())
+	else:
+		_avatar.add_theme_stylebox_override("panel", PleosTheme.box(_color, 999, 0))
 	_initial.text = String(p.get("initial", "?"))
 	_name.text = String(p.get("name", ""))
 	_sub.text = String(p.get("sub", ""))
+	_portrait.texture = tex as Texture2D
+	_portrait.visible = tex != null
+	_initial.visible = tex == null
+
+
+## p: {initial, color, name, sub, portrait(선택)}
+func show_call(p: Dictionary) -> void:
+	_apply_profile(p)
 	_t = 0.0
 	_talk_t = 0.0
 	set_phase("dialing")
@@ -74,11 +99,7 @@ func show_call(p: Dictionary) -> void:
 
 ## 연결되면 받은 사람(제보자)을 보여 주고 통화 중으로
 func connect_to(p: Dictionary) -> void:
-	_color = p.get("color", Color.GRAY)
-	_avatar.add_theme_stylebox_override("panel", PleosTheme.box(_color, 999, 0))
-	_initial.text = String(p.get("initial", "?"))
-	_name.text = String(p.get("name", ""))
-	_sub.text = String(p.get("sub", ""))
+	_apply_profile(p)
 	set_phase("talking")
 
 

@@ -6,6 +6,7 @@ Godot 데모에는 여기서 검증한 퍼즐을 JSON으로 내보내서 쓴다.
 
 Python 3.9 이상, 표준 라이브러리만 쓴다(3.12 권장). 모든 명령은 이 폴더(`prototype/`)에서 실행한다.
 난이도: `easy`, `normal`, `hard`, `phishing`(보이스피싱 사업부: 사칭범, 익명 제보). 규칙은 룰 v1(내비 Dupery)이다.
+확장 사건(경찰 검거·사기·불륜 현장): `wanted`, `theft`, `hitrun`, `usedgoods`, `invest`, `romance`, `affair`, `reunion`. 규칙은 같고 악역 구성·말썽꾼·익명·예산이 다르다. 설명은 [docs/extra-cases.md](../docs/extra-cases.md)에 있다.
 
 ## 직접 플레이
 ```bash

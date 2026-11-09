@@ -5,7 +5,8 @@ class_name AdasAssets
 extends RefCounted
 
 const CATALOGS := ["res://assets/models/vehicles.json", "res://assets/models/people/people.json",
-		"res://assets/models/props/props.json", "res://assets/models/figures/figures.json"]
+		"res://assets/models/props/props.json", "res://assets/models/figures/figures.json",
+		"res://assets/models/hyundai/hyundai.json"]
 
 static var _models := {}        # id → 목록 항목
 static var _scenes := {}        # id → PackedScene
@@ -37,6 +38,13 @@ static func size_of(id: String) -> Vector3:
 		return Vector3(2.0, 1.5, 4.6)
 	var s: Array = _models[id]["size_m"]
 	return Vector3(float(s[0]), float(s[1]), float(s[2]))
+
+
+## 목록 항목의 값 하나(예: wheel_radius). 없으면 기본값.
+static func info(id: String, key: String, default: Variant) -> Variant:
+	_load()
+	var item: Dictionary = _models.get(id, {})
+	return item.get(key, default)
 
 
 ## 모델 인스턴스. 파일이 없으면 null.

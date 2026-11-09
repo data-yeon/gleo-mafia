@@ -413,13 +413,16 @@ func _run() -> void:
 	d.call_place(2)
 	_check(c.used == 1 and c.observed.has(2), "회신 전화는 규칙상 바로 쓴다")
 	_check(d.fx_busy() and shell.call_pill.visible and shell.call_pill.phase == "dialing", "연결 중 알약")
-	_check(shell.inset.visible and shell.inset.mode == "call" and not shell.inset.big, "현장 3D 확대도(중간 크기)가 뜬다")
+	# 제보자 얼굴 그림이 있으면 얼굴 카드(통화 화면)가, 없으면 현장 3D 확대도(중간 크기)가 뜬다
+	_check(shell.inset.visible and shell.inset.mode == "call" and (shell.inset._portrait.visible or not shell.inset.big),
+			"통화 화면(얼굴 카드 또는 현장 확대도)이 뜬다")
 	_check(d.deduction.live_sets().size() == 36 and not d._heard_order.has(2), "끊기 전엔 경우의 수가 그대로")
 	d.call_place(4)
 	_check(not c.observed.has(4), "통화 중엔 다른 곳에 걸 수 없다")
 	_pump(d, 1.5)
 	_check(shell.call_pill.phase == "talking" and String(d.gleo._text.text).contains("장사"), "연결되면 제보자 말이 자막으로")
-	_check(shell.inset.phase == "talking" and shell.inset._figure != null, "확대도에 제보자가 나타난다")
+	_check(shell.inset.phase == "talking" and (shell.inset._figure != null or shell.inset._portrait.visible),
+			"통화 화면에 제보자(3D 인물 또는 얼굴 카드)가 나타난다")
 	_pump(d, 12.0)
 	_check(not d.fx_busy() and d._heard_order.has(2), "통화가 끝나면 말이 노트에 오른다")
 	_check(d.deduction.live_sets().size() == 21, "끊은 뒤 경우의 수 21 (%d)" % d.deduction.live_sets().size())

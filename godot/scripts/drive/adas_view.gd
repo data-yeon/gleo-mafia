@@ -10,6 +10,9 @@ extends SubViewportContainer
 const LANE_W := AdasWorld.LANE_W
 const CAM_OFFSET := Vector3(0, 10.0, 14.0)
 const CAM_PITCH_DEG := -32.0
+# 가까운 카메라(--cam=close): 내 차가 크게 보인다. 대신 앞쪽 시야가 줄어든다
+const CAM_OFFSET_CLOSE := Vector3(0, 6.0, 9.5)
+const CAM_PITCH_CLOSE_DEG := -24.0
 const TUNNEL_BG := Color("4f5866")
 const PATH_AHEAD := 34.0
 # 빛 세기: Blender 미리보기(model_preview)와 같게. 이 값이면 그림자 안 받는 바닥이 제 색(알베도)에 가깝다
@@ -32,7 +35,11 @@ var _root: Node3D
 var _env: Environment
 var _sun: DirectionalLight3D
 var _cam: Camera3D
+var cam_close := false                # 가까운 카메라(CAM_OFFSET_CLOSE)
+var ego_model := "hyundai_grandeur"   # 내 차 모델 id(목록 vehicles.json·hyundai.json). 없으면 ego_car
 var _ego: Node3D
+var _wheels: Array[Node3D] = []
+var _wheel_r := 0.35
 var _ground: MeshInstance3D
 var _path_mesh: ImmediateMesh
 var _ready_world := false
@@ -121,10 +128,17 @@ func _build() -> void:
 	path.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	_root.add_child(path)
 
-	_ego = AdasAssets.instance("ego_car")
+	var model_id := ego_model if AdasAssets.has(ego_model) else "ego_car"
+	_ego = AdasAssets.instance(model_id)
 	if _ego == null:
 		_ego = AdasAssets.box_vehicle(Color("fbfcfd"))
 	_root.add_child(_ego)
+	# 바퀴 노드(wheel_FL/FR/RL/RR)가 있으면 달린 거리만큼 굴린다
+	_wheel_r = float(AdasAssets.info(model_id, "wheel_radius", 0.35))
+	for wn in ["wheel_FL", "wheel_FR", "wheel_RL", "wheel_RR"]:
+		var w := _ego.find_child(wn, true, false) as Node3D
+		if w != null:
+			_wheels.append(w)
 
 
 ## 퍼즐 팩(v3)과 경로 계획으로 도시를 만들고 주변 차·보행자·랜드마크를 놓는다. ego_s는 시작 위치(m).
@@ -138,6 +152,14 @@ func setup(data: Dictionary, plan: RoutePlan, ego_s: float) -> void:
 	_last_s = -1.0
 	_yaw_ready = false
 	_ready_world = true
+
+
+## 바퀴 굴리기. 앞이 -Z라서 앞으로 갈 때 로컬 X축 음의 방향으로 돈다. 장면 건너뛰기(80m 넘게 점프)는 무시한다.
+func _spin_wheels(ds: float) -> void:
+	if _wheels.is_empty() or absf(ds) > 80.0 or absf(ds) < 0.0001:
+		return
+	for w in _wheels:
+		w.rotate_object_local(Vector3.RIGHT, -ds / _wheel_r)
 
 
 ## 터널 안이면 화면을 어둡게 한다(벽은 도시에 실제 위치로 서 있다).
@@ -182,9 +204,11 @@ func _process(delta: float) -> void:
 		_lat = target_lat
 	else:
 		_lat = lerpf(_lat, target_lat, clampf(absf(s - _last_s) / 30.0, 0.0, 1.0))
+	var ds := 0.0 if _last_s < 0.0 else s - _last_s
 	_last_s = s
 	var xf := city.xform(s, _lat)
 	_ego.transform = xf
+	_spin_wheels(ds)
 	# 카메라: 내 차 뒤 위에서, 진행 방향을 부드럽게 따라 돈다
 	var yaw := xf.basis.get_euler().y
 	if not _yaw_ready:
@@ -192,8 +216,10 @@ func _process(delta: float) -> void:
 		_yaw_ready = true
 	else:
 		_yaw = lerp_angle(_yaw, yaw, clampf(delta * 3.0, 0.0, 1.0))
-	_cam.position = xf.origin + Basis(Vector3.UP, _yaw) * CAM_OFFSET
-	_cam.rotation = Vector3(deg_to_rad(CAM_PITCH_DEG), _yaw, 0.0)
+	var cam_off := CAM_OFFSET_CLOSE if cam_close else CAM_OFFSET
+	var cam_pitch := CAM_PITCH_CLOSE_DEG if cam_close else CAM_PITCH_DEG
+	_cam.position = xf.origin + Basis(Vector3.UP, _yaw) * cam_off
+	_cam.rotation = Vector3(deg_to_rad(cam_pitch), _yaw, 0.0)
 	_ground.position = Vector3(xf.origin.x, -0.06, xf.origin.z)
 
 	var red := _update_signals(s)

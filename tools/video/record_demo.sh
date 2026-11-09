@@ -3,7 +3,7 @@
 # 제목 카드를 붙여 video/1_tutorial.mp4, 2_main_case.mp4, 3_missed_ending.mp4로 만든다.
 # 실행: tools/video/record_demo.sh  (Godot 창이 맨 위에 뜬다. 녹화 중에는 가리거나 최소화하지 말 것. 약 8분)
 set -e
-REPO="$(cd "$(dirname "$0")/../.." && pwd)"
+REPO=/Users/donghyun.kim/Works/hackerthon/gleo-mafia
 SP=$REPO/video/.work
 mkdir -p $SP
 cd $REPO

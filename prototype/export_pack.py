@@ -3,6 +3,7 @@
 python3 export_pack.py                                  # 난이도별 10개씩 → out/pack/
 python3 export_pack.py --per-preset 20 --out ../godot/data/puzzles
 python3 export_pack.py --only normal:101 hard:202       # 특정 사건만
+python3 export_pack.py --only wanted:2000 --out ../godot/data/puzzles --merge-index   # 팩 목록(index.json)은 그대로 두고 이 사건만 더하기
 
 채택 조건: 9곳 전부 탐문하면 답이 하나 + smart 봇이 잠복을 써서 찍기 없이 풀 수 있음.
 스키마 설명: docs/puzzle-pack-schema.md
@@ -146,7 +147,9 @@ def contradictions(an: CaseAnalyzer) -> list[dict]:
     return out
 
 
-def roles_table() -> dict:
+def roles_table(preset=None) -> dict:
+    """역할 표. 사건 팩(preset)이 악역 이름을 바꿔 쓰면(rules.Preset.labels) 그 이름을 label에 넣는다."""
+    over = dict(preset.labels) if preset is not None else {}
     table = {}
     for r in HONEST_ROLES:
         table[r.name] = {"label": r.label, "side": "honest",
@@ -154,7 +157,7 @@ def roles_table() -> dict:
     for r in MEDDLER_ROLES:
         table[r.name] = {"label": r.label, "side": "meddler"}
     for r in EVIL_ROLES:
-        table[r.name] = {"label": r.label, "side": "evil"}
+        table[r.name] = {"label": over.get(r.name, r.label), "side": "evil"}
     return table
 
 
@@ -178,7 +181,7 @@ def case_json(case: Case, an: CaseAnalyzer) -> dict:
                   "finalPhaseStart": FINAL_PHASE_START, "callTime": round(call_time(case.file.budget), 4),
                   "raidTime": RAID_TIME, "stakeoutLookahead": STAKEOUT_LOOKAHEAD,
                   "stakeoutPass": STAKEOUT_PASS},
-        "roles": roles_table(),
+        "roles": roles_table(p),
         "anonymousLabel": ANON_LABEL,
         "units": "m, x=east y=north, origin=route start",
         "route": [[x, y] for x, y in b.route],
@@ -212,6 +215,8 @@ def main():
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--only", nargs="*", help="preset:seed 목록 (자동 선별 없이 이것만)")
     ap.add_argument("--extra", nargs="*", default=[], help="자동 선별에 더할 preset:seed 목록")
+    ap.add_argument("--merge-index", action="store_true",
+                    help="out 폴더의 index.json을 덮어쓰지 않고, 같은 id는 바꾸고 새 id는 뒤에 붙인다")
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
 
@@ -235,7 +240,13 @@ def main():
         path.write_text(json.dumps(data, ensure_ascii=False, indent=1))
         index.append({"id": data["id"], "preset": key, "file": path.name,
                       "minInvestigations": data["analysis"]["minInvestigations"]})
-    (args.out / "index.json").write_text(json.dumps(index, ensure_ascii=False, indent=1))
+    index_path = args.out / "index.json"
+    if args.merge_index and index_path.exists():
+        old_index = json.loads(index_path.read_text())
+        new_by_id = {e["id"]: e for e in index}
+        merged = [new_by_id.pop(e["id"], e) for e in old_index]
+        index = merged + list(new_by_id.values())
+    index_path.write_text(json.dumps(index, ensure_ascii=False, indent=1))
     print(f"{len(index)}개 퍼즐 → {args.out}")
 
 

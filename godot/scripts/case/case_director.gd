@@ -46,6 +46,7 @@ var coach: CoachMark
 var case: PuzzleCase
 var overlay := CaseOverlay.new()
 var puzzle_path := ""
+var _voice: AudioStreamPlayer     # 제보자 음성(VoiceBank). 통화 중에만 쓴다
 var selected := -1
 
 var shell: Control
@@ -452,7 +453,13 @@ func _start_call(id: int) -> void:
 	call_pill.show_call({"initial": PuzzleCase.circled(id), "color": Color("4a5466"),
 			"name": "%s 제보자" % case.place_label(id), "sub": "회신 전화 연결 중…"})
 	sfx.play("ring", -3.0)
-	inset.show_call(case.place(id), case.place_label(id))
+	# 제보자 얼굴 그림이 있으면 통화 화면 왼쪽에 크게 보여 준다(터널 안은 누군지 몰라 그림 없음)
+	var obs_now := case.obscured.has(id)
+	var ps0 := story.persona(id, obs_now)
+	var face: Texture2D = null
+	if not obs_now:
+		face = PortraitBank.card_for_persona(case.shown_role(id), String(ps0["name"]), bool(ps0["anon"]))
+	inset.show_call(case.place(id), case.place_label(id), face)
 	_hold_until = _clock + 999.0          # 통화 중엔 다른 안내가 끼어들지 않게 줄을 세운다
 	gleo.show_speaking("%s 제보자에게 회신 전화를 걸고 있어요…" % case.place_label(id), "Gleo · 회신 전화")
 	shell.call_deferred("_layout")
@@ -476,20 +483,55 @@ func _advance_call(delta: float) -> void:
 			sub = "음성 변조 · %s" % case.place_label(id)
 		else:
 			sub = "자칭 %s · %s" % [ps["role"], case.place_label(id)]
-		call_pill.connect_to({"initial": ps["initial"], "color": ps["color"], "name": ps["name"], "sub": sub})
+		# 얼굴 그림이 있으면 프로필에 넣는다(터널 안에서는 누군지 몰라 이니셜 "?")
+		var face: Texture2D = null
+		if not bool(ps["obscured"]):
+			face = PortraitBank.texture_for_persona(case.shown_role(id), String(ps["name"]), bool(ps["anon"]))
+		call_pill.connect_to({"initial": ps["initial"], "color": ps["color"], "name": ps["name"], "sub": sub,
+				"portrait": face})
 		inset.connect_call(case.shown_role(id), "%s · %s" % [ps["name"], sub], obscured)
 		var text := _statement_text(id, _call["stmt"], false)
-		gleo.show_speaking(text, story.speaker(id, obscured))
-		_call["dur"] = text.length() / GleoBar.CPS + CALL_HANG_S
+		# 제보자 음성이 있으면 재생하고, 자막이 음성 길이에 맞춰 나온다(끊기는 시각도 음성 끝 기준)
+		var vs := VoiceBank.stream_for(String(case.data.get("id", "")), id, story.line(id))
+		var voice_s := _play_voice(vs, obscured)
+		var cps := 0.0
+		if voice_s > 0.0:
+			cps = maxf(8.0, minf(GleoBar.CPS, text.length() / (voice_s * 0.9)))
+		gleo.show_speaking(text, story.speaker(id, obscured), cps)
+		_call["dur"] = maxf(text.length() / GleoBar.CPS, voice_s) + CALL_HANG_S
 	elif float(_call["t"]) >= float(_call["dur"]) and not gleo.typing:
 		sfx.play("hangup", -6.0)
 		call_pill.set_phase("ended")
 		_end_call()
 
 
+## 제보자 음성 재생. 길이(초)를 돌려준다. 음성이 없거나 효과음이 꺼져 있으면 0.
+func _play_voice(stream: AudioStream, obscured: bool) -> float:
+	_stop_voice()
+	if stream == null or (sfx != null and sfx.muted):
+		return 0.0
+	if _voice == null:
+		_voice = AudioStreamPlayer.new()
+		add_child(_voice)
+	_voice.stream = stream
+	_voice.volume_db = -6.0 if obscured else 0.0       # 터널 안은 잡음에 묻혀 작게 들린다
+	_voice.play()
+	var amb = shell.get("ambient")                      # 음성이 나오는 동안 주행 소리를 낮춘다
+	if amb != null:
+		amb.duck(stream.get_length())
+	print("[voice] %s/%s %.1fs" % [String(case.data.get("id", "")), str(_call.get("id", "")), stream.get_length()])
+	return stream.get_length()
+
+
+func _stop_voice() -> void:
+	if _voice != null and _voice.playing:
+		_voice.stop()
+
+
 func _end_call() -> void:
 	var id := int(_call["id"])
 	_call = {}
+	_stop_voice()
 	inset.close(0.5)
 	deduction.pending.clear()
 	_hold_until = _clock + 2.0            # 다 들은 말은 잠깐 그대로 두고, 그다음 경우의 수 안내
@@ -998,6 +1040,7 @@ func _on_ended(_status: String) -> void:
 	edge_left.siren = false
 	if not _call.is_empty():
 		_call = {}
+		_stop_voice()
 		deduction.pending.clear()
 		call_pill.hide_call()
 		_hold_until = 0.0

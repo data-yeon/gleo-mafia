@@ -23,3 +23,11 @@ __pycache__/
 
 # Recorded videos and work files (repo root only)
 /video/
+
+# 현대차 사내 전용 모델링: 공개 저장소에 올리지 않는다(앱에서는 없으면 기본 세단으로 대신한다)
+godot/assets/models/hyundai/
+
+# 공모전 신청서(개인정보), 내부 검토 메모, 참고 화면
+docs/contest-application*
+docs/script-review.md
+docs/images/ref-*

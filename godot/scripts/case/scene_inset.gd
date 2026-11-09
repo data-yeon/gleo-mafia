@@ -10,6 +10,9 @@ class_name SceneInset
 extends PanelContainer
 
 const SIZE_CALL := Vector2i(640, 340)
+const SIZE_FACE := Vector2i(400, 440)     # 제보자 얼굴 그림이 있는 회신 전화: 얼굴 카드 하나(3D 장면은 숨김)
+const CARD_BG := Color("1f2633")
+const ROUND_SHADER := "shader_type canvas_item;\nuniform vec2 box_size = vec2(400.0, 440.0);\nuniform float radius = 18.0;\nvoid fragment() {\n\tvec2 p = (UV - vec2(0.5)) * box_size;\n\tvec2 q = abs(p) - (box_size * 0.5 - vec2(radius));\n\tfloat d = length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - radius;\n\tCOLOR.a *= 1.0 - smoothstep(-1.0, 0.5, d);\n}\n"
 const SIZE_BIG := Vector2i(960, 520)
 ## Blender 인물이 없을 때 대신 쓰는 보행자 모델(자칭 직업 → 보행자)
 const FALLBACK := {"COP": "ped_suit", "GUARD": "ped_suit", "TAXI": "ped_suit", "VENDOR": "ped_casual",
@@ -25,6 +28,10 @@ var phase := ""                   # dialing | talking | go | entry | hit | miss 
 var big := false
 
 var _vp: SubViewport
+var _cont: SubViewportContainer
+var _portrait: TextureRect        # 회신 전화 때 제보자 얼굴(그림이 있을 때만)
+var _fade: TextureRect            # 얼굴 아래를 카드 색으로 잇는 그라데이션
+var _face: Texture2D
 var _world: Node3D
 var _cam: Camera3D
 var _title: Label
@@ -57,15 +64,52 @@ func _ready() -> void:
 	var frame := Control.new()
 	frame.clip_contents = true
 	col.add_child(frame)
-	var cont := SubViewportContainer.new()
-	cont.stretch = true
-	cont.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	cont.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	frame.add_child(cont)
+	_cont = SubViewportContainer.new()
+	_cont.stretch = true
+	_cont.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_cont.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	frame.add_child(_cont)
 	_vp = SubViewport.new()
 	_vp.own_world_3d = true
 	_vp.msaa_3d = Viewport.MSAA_4X
-	cont.add_child(_vp)
+	_cont.add_child(_vp)
+	# 제보자 얼굴 카드(회신 전화): 카드 전체를 얼굴이 채우고(3D 장면은 숨김), 모서리는 둥글게,
+	# 아래쪽은 카드 색으로 서서히 이어 붙여 어깨선의 잘린 경계가 안 보이게 한다
+	_portrait = TextureRect.new()
+	_portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_portrait.stretch_mode = TextureRect.STRETCH_SCALE
+	_portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_portrait.anchor_left = 0.0
+	_portrait.anchor_right = 0.0
+	_portrait.anchor_top = 0.0
+	_portrait.anchor_bottom = 1.0
+	_portrait.visible = false
+	var rsh := Shader.new()
+	rsh.code = ROUND_SHADER
+	var rmat := ShaderMaterial.new()
+	rmat.shader = rsh
+	_portrait.material = rmat
+	frame.add_child(_portrait)
+	var fade_grad := Gradient.new()
+	fade_grad.offsets = PackedFloat32Array([0.0, 0.5, 1.0])
+	fade_grad.colors = PackedColorArray([Color(CARD_BG, 0.0), Color(CARD_BG, 0.55), Color(CARD_BG, 1.0)])
+	var fade_tex := GradientTexture2D.new()
+	fade_tex.gradient = fade_grad
+	fade_tex.fill_from = Vector2(0.0, 0.0)
+	fade_tex.fill_to = Vector2(0.0, 1.0)
+	fade_tex.width = 4
+	fade_tex.height = 128
+	_fade = TextureRect.new()
+	_fade.texture = fade_tex
+	_fade.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	_fade.stretch_mode = TextureRect.STRETCH_SCALE
+	_fade.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fade.anchor_left = 0.0
+	_fade.anchor_right = 0.0
+	_fade.anchor_top = 0.72
+	_fade.anchor_bottom = 1.0
+	_fade.visible = false
+	frame.add_child(_fade)
 	_noise = ColorRect.new()
 	_noise.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_noise.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -101,10 +145,20 @@ void fragment() {
 	visible = false
 
 
-func _apply_size(is_big: bool) -> void:
-	big = is_big
-	var s := SIZE_BIG if is_big else SIZE_CALL
+func _apply_size(is_big: bool, face := false) -> void:
+	big = is_big or face              # 얼굴 통화도 지도 가운데에 크게 띄운다(통화 중엔 지도가 가려져도 된다)
+	var s := SIZE_BIG if is_big else (SIZE_FACE if face else SIZE_CALL)
+	_cont.visible = not face           # 얼굴 통화에는 3D 장면을 보여 주지 않는다(장소는 자막에 나온다)
+	_cont.offset_left = 0.0
 	_vp.size = s
+	_portrait.visible = face
+	_fade.visible = face
+	for tr in [_portrait, _fade]:
+		tr.offset_left = 0.0
+		tr.offset_right = float(s.x)
+		tr.offset_top = 0.0
+		tr.offset_bottom = 0.0
+	(_portrait.material as ShaderMaterial).set_shader_parameter("box_size", Vector2(s))
 	var frame: Control = _vp.get_parent().get_parent()
 	frame.custom_minimum_size = Vector2(s)
 	_title.add_theme_font_size_override("font_size", 26 if is_big else 22)
@@ -270,8 +324,8 @@ func _caption(title: String, sub: String) -> void:
 	_sub.visible = sub != ""
 
 
-func _open(is_big: bool) -> void:
-	_apply_size(is_big)
+func _open(is_big: bool, face := false) -> void:
+	_apply_size(is_big, face)
 	_close_in = -1.0
 	_t = 0.0
 	_phase_t = 0.0
@@ -304,11 +358,16 @@ func _hide_now() -> void:
 # ---------------------------------------------------------------- 회신 전화
 
 ## 연결 중: 건물만 보이고 "따르릉".
-func show_call(place: Dictionary, label: String) -> void:
+func show_call(place: Dictionary, label: String, face: Texture2D = null) -> void:
 	mode = "call"
 	phase = "dialing"
+	_face = face
 	_build(place)
-	_open(false)
+	_open(false, face != null)
+	if face != null:                    # 연결 중에는 얼굴이 어둡게, 연결되면 밝아진다
+		_portrait.texture = face
+		_portrait.modulate = Color(0.28, 0.28, 0.34)
+		_portrait.scale = Vector2.ONE
 	_noise.visible = false
 	_mark = _label3d("따르릉…", Color("4a5466"), _figure_pos + Vector3(0, 2.4, 0), 56)
 	var fr := _frame(false)
@@ -323,10 +382,15 @@ func connect_call(role: String, who: String, obscured: bool) -> void:
 	phase = "talking"
 	_phase_t = 0.0
 	var key := "ANON" if role == "" or obscured else role
-	_figure = _person(key, obscured)
-	_figure.position = _figure_pos
-	_figure.rotation_degrees.y = 160.0
-	_world.add_child(_figure)
+	if _face != null and not obscured:
+		# 얼굴 그림이 있으면 3D 인물은 세우지 않고, 얼굴이 밝아지며 통화가 시작된다
+		_figure = null
+		create_tween().tween_property(_portrait, "modulate", Color.WHITE, 0.35)
+	else:
+		_figure = _person(key, obscured)
+		_figure.position = _figure_pos
+		_figure.rotation_degrees.y = 160.0
+		_world.add_child(_figure)
 	if _mark != null:
 		_mark.text = "…"
 		_mark.modulate = Color("2f6bff")
@@ -494,6 +558,9 @@ func _process(delta: float) -> void:
 		_flash_bars()
 	match phase:
 		"talking":
+			if _face != null and _portrait.visible:          # 말하는 동안 얼굴이 살짝 숨 쉬듯 움직인다
+				_portrait.pivot_offset = _portrait.size / 2.0
+				_portrait.scale = Vector2.ONE * (1.0 + 0.012 * absf(sin(_t * 7.0)))
 			if _figure != null:
 				_figure.position.y = _figure_pos.y + 0.03 * absf(sin(_t * 6.0))
 				# 자칭 드론 유튜버: 머리 위 드론이 떠서 흔들린다
