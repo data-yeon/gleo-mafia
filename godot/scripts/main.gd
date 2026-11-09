@@ -406,7 +406,7 @@ func _build_ui() -> void:
 	var th := HBoxContainer.new()
 	th.add_theme_constant_override("separation", 32)
 	top.add_child(th)
-	th.add_child(_label("수사망", 28, Color("6fa8ff")))
+	th.add_child(_label("Gleo Mafia", 28, Color("6fa8ff")))
 	lbl_eta = _label("", 26, Color.WHITE)
 	lbl_budget = _label("", 26, Color.WHITE)
 	lbl_rep = _label("", 26, Color("ffc94a"))

@@ -1,4 +1,4 @@
-# 수사망 Godot 데모
+# Gleo Mafia Godot 데모
 
 Godot 4.7(GDScript, Compatibility 렌더러, 1920×1080). 계획은 [docs/demo-plan.md](../docs/demo-plan.md)에 있다.
 

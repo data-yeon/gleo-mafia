@@ -1,8 +1,8 @@
-# 수사망 (Gleo Mafia)
+# Gleo Mafia
 
 자율주행 중 내비 지도 위 실제 장소 9곳에서 조직원이 숨은 곳을 도착 전에 음성으로 추리하는 1인 게임입니다. 현대자동차그룹 차량용 앱 개발 공모전 출품작입니다.
 
-![Pleos 차량 화면 위의 수사망](docs/images/pleos-shell-case.png)
+![Pleos 차량 화면 위의 Gleo Mafia](docs/images/pleos-shell-case.png)
 
 ## 소개
 
@@ -16,7 +16,7 @@
 ## APK
 
 - 설치용 APK: [apk 폴더](apk)(파일 이름은 공모전 규칙 `팀명_앱이름_release.apk`에 맞춤. 지문값은 [apk/README.md](apk/README.md))
-- 앱 이름 `수사망`, 패키지 `com.gleo.mafia`, 최소 Android 9(API 28)
+- 앱 이름 `Gleo Mafia`, 패키지 `com.gleo.mafia`, 최소 Android 9(API 28)
 - 설치: `adb install -r <APK 파일>`
 
 ## 폴더 구성
@@ -44,7 +44,7 @@ godot --path godot
 
 1. [apk 폴더](apk)에서 APK를 내려받습니다.
 2. `adb install -r <APK 파일>`로 설치합니다.
-3. 앱 목록에서 `수사망`을 실행합니다. Pleos Connect 에뮬레이터 준비는 아래 테스트 환경을 참고하세요.
+3. 앱 목록에서 `Gleo Mafia`를 실행합니다. Pleos Connect 에뮬레이터 준비는 아래 테스트 환경을 참고하세요.
 
 ### 직접 빌드(APK)
 

@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="수사망 (Gleo Mafia)"
+config/name="Gleo Mafia"
 config/description="차량용 1인 추리 게임 데모: 지도 위 9곳 중 조직원이 숨은 곳 찾기"
 run/main_scene="res://scenes/pleos_shell.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
