@@ -5,5 +5,6 @@
 - 요구 사양: Android 9(API 28) 이상, arm64
 - 실행 확인: Pleos Connect v2.1.0 에뮬레이터(Automotive, API 34)
 - 서명: 인증서 `CN=Gleo Mafia`
-- 파일 SHA-256: `6bfc0af099e21c20e95f24222ece70c500f3984969c913c2cd6f07e88aca8d68`
+- 파일 SHA-256: `86c981e06960f496f43afb04807ff424bf43eb6c7b86038c32a666ef43555c2f`
+- 내용: 보이스피싱 4개 판, 쉬움~어려움 12개 판, 경찰 검거·사기·불륜 현장 8개 판, 튜토리얼 1개, 제보자 음성 포함(2026-11-09 빌드)
 - 설치: `adb install -r <APK 파일>`
